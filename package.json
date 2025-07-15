@@ -1,0 +1,25 @@
+{
+  "name": "km-agents-demo",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["langchain", "langraph", "gemini", "ai", "agents"],
+  "author": "",
+  "license": "ISC",
+  "description": "A TypeScript project demonstrating LangChain agents with Gemini and LangGraph",
+  "dependencies": {
+    "@langchain/community": "^0.3.48",
+    "@langchain/core": "^0.3.62",
+    "@langchain/google-genai": "^0.2.14",
+    "@langchain/langgraph": "^0.3.8",
+    "@types/node": "^24.0.13",
+    "langchain": "^0.3.29",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
