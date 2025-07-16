@@ -6,7 +6,7 @@ async function main() {
   // Initialize the Gemini model
   // Note: You'll need to set your GOOGLE_API_KEY environment variable
   const model = new ChatGoogleGenerativeAI({
-    model: "gemini-pro",
+    model: "gemini-2.0-flash",
     maxOutputTokens: 2048,
   });
 
