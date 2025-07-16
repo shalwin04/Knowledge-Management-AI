@@ -1,11 +1,11 @@
 import { GoogleGenerativeAIEmbeddings} from "@langchain/google-genai";
-import { driver } from "./neo4j";
+import { driver } from "../utils/neo4j";
 import dotenv from "dotenv";
 
 dotenv.config();
 const embedder = new GoogleGenerativeAIEmbeddings({
   modelName: "embedding-001",
-  taskType: "retrieval_document" as any, // ✅ Quick fix
+  taskType: "retrieval_document" as any, 
 });
 
 

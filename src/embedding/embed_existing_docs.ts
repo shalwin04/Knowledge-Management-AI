@@ -1,5 +1,5 @@
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
-import { driver } from "./neo4j";
+import { driver } from "../utils/neo4j";
 import dotenv from "dotenv";
 
 dotenv.config();
