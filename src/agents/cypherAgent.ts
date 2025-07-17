@@ -1,7 +1,5 @@
 import { ChatOpenAI } from "@langchain/openai";
 import { PromptTemplate } from "@langchain/core/prompts";
-import { GraphCypherQAChain } from "@langchain/community/chains/graph_qa/cypher";
-import { Neo4jGraph } from "@langchain/community/graphs/neo4j_graph";
 
 const schema = `
 Node Types and Properties:
@@ -35,7 +33,6 @@ MATCH (d:Domain {{name: "ETFM"}})-[:HAS_CLIENT]->(c:Client) RETURN c.name
 Response (Cypher only):
 `;
 
-
 const prompt = new PromptTemplate({
   template: QA_TEMPLATE,
   inputVariables: ["question"],
@@ -43,7 +40,7 @@ const prompt = new PromptTemplate({
 });
 
 const llm = new ChatOpenAI({
-  modelName: "gpt-4-turbo", // Or "gpt-4"
+  modelName: "gpt-4-turbo",
   temperature: 0,
   openAIApiKey: process.env.OPENAI_API_KEY!,
 });
@@ -51,29 +48,25 @@ const llm = new ChatOpenAI({
 export async function getCypherFromQuery(input: { query: string }): Promise<string> {
   const { query } = input;
 
-  const graph = await Neo4jGraph.initialize({
-    url: process.env.NEO4J_URI!,
-    username: process.env.NEO4J_USERNAME!,
-    password: process.env.NEO4J_PASSWORD!,
-  });
-
-  const chain = await GraphCypherQAChain.fromLLM({
-    llm,
-    graph,
-    cypherPrompt: prompt,
-  });
-
   console.log("🧠 Sending question to LLM:", query);
 
   const formattedPrompt = await prompt.format({ question: query });
-  console.log("📝 Formatted prompt being sent:", formattedPrompt);
+  console.log("📝 Prompt sent:\n", formattedPrompt);
 
-  const res = await chain.invoke({
-    question: query,
-  });
+  const llmRes = await llm.invoke(formattedPrompt);
+  let raw = '';
+  if (typeof llmRes.content === 'string') {
+    raw = llmRes.content.trim();
+  } else if (Array.isArray(llmRes.content)) {
+    raw = llmRes.content[0]?.toString() || '';
+  } else {
+    raw = '';
+  }
 
-  let cypher = (res.result || res.text || "").trim();
-  console.log("📤 Raw Cypher output from LLM:\n", cypher);
+  console.log("🧠 Raw LLM Response:\n", raw);
+
+  // Clean ```cypher markdown
+  let cypher = raw.replace(/```cypher/g, "").replace(/```/g, "").trim();
 
   const cypherLines = cypher.split("\n").filter((line: string) => {
     const trimmed = line.trim();
@@ -98,7 +91,11 @@ export async function getCypherFromQuery(input: { query: string }): Promise<stri
     cypher = cypherLines.join("\n").trim();
   }
 
-  console.log("🔧 Cleaned Cypher query:\n", cypher);
+  console.log("🔧 Final Cleaned Cypher query:\n", cypher);
+
+  if (!cypher.toLowerCase().startsWith("match")) {
+    throw new Error(`❌ Invalid or empty Cypher query generated:\n${cypher}`);
+  }
 
   return cypher;
 }
