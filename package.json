@@ -24,10 +24,16 @@
     "@langchain/google-genai": "^0.2.15",
     "@langchain/langgraph": "^0.3.8",
     "@types/node": "^24.0.13",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.0",
+    "express": "^5.1.0",
     "langchain": "^0.3.30",
     "neo4j-driver": "^5.28.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3"
   }
 }

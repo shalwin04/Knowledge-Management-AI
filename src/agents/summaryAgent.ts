@@ -18,5 +18,9 @@ Summarize the result in plain English for display in a UI:
   `;
 
   const res = await llm.invoke(prompt);
-  return res.content;
+  const summary = res.content;
+
+  console.log("📝 Summary from Gemini:\n", summary); // <-- Log the output
+
+  return summary;
 }
