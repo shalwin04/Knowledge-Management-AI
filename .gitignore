@@ -15,6 +15,9 @@ node_modules/
 .env.local
 .env.*.local
 
+credentials.json
+token.json
+
 # IDE
 .idea/
 .vscode/
